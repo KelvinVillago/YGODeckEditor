@@ -14,11 +14,9 @@
 {% block content %}
     <div class="col-12">
         {% for num in nums %}
-            <div class="card my-3 bg-primary-subtle border-danger-subtle">
+            <div class="card my-3 bg-dark-subtle border-primary-subtle text-center">
                 <div class="row g-0">
-                    <div class="col-md-4">
-                    </div>
-                    <div class="col-md-8">
+                    <div class="col-md-12">
                         <div class="card-body">
                         <h5 class="card-title">{{ num.first_name.title()+' '+num.last_name.title() }}</h5>
                         <h6 class="card-subtle">Address: {{ num.address }}</h6>
