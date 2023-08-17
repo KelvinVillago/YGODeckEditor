@@ -1,20 +1,33 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flask Intro</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css">
-</head>
-<body>
+{% extends 'base.html' %}
 
-    {% extends 'base.html' %}
-    
-    {% block header %}
-            <h1>Welcome to the Phone Book</h1>
-            <h3>Please sign up to have your number added</h3>
-    {% endblock header %}
+{% block title %} Home {% endblock title %}
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+{% block header %}
+    <h1>Welcome to the Phone Book</h1>
+    {% if current_user.is_authenticated %}
+        <h4>Hello {{current_user.username}}</h4>
+    {% else %}
+        <h4>Please Sign Up or Log In to use the Phone Book</h4>
+    {% endif %}
+{% endblock header %}
+
+{% block content %}
+    <div class="col-12">
+        {% for num in nums %}
+            <div class="card my-3 bg-primary-subtle border-danger-subtle">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                        <h5 class="card-title">{{ num.first_name.title()+' '+num.last_name.title() }}</h5>
+                        <h6 class="card-subtle">Address: {{ num.address }}</h6>
+                        <p class="card-text">Phone Number: {{ num.phoneNum }}</p>
+                        <p class="card-text"><small class="text-body-secondary">{{ num.dateCreated.strftime('%A %b %d, %Y at %I:%M%p')  }}</small></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock content %}
