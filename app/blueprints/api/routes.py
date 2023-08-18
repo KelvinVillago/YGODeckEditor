@@ -5,18 +5,19 @@ from flask import request
 from .auth import basic_auth, token_auth
 
 @api.route('/token')
+@basic_auth.login_required
 def get_token():
     auth_user = basic_auth.current_user()
     token = auth_user.get_token()
     return {'token':token,
             'token_expiration': auth_user.token_expiration}
 
-@api.route('/phone_nums')
+@api.route('/nums')
 def get_nums():
     nums = db.session.execute(db.select(Phone)).scalars().all()
     return [num.to_dict() for num in nums]
 
-@api.route('/phone_nums/<num_id>')
+@api.route('/nums/<num_id>')
 def get_num(num_id):
     num = db.session.get(Phone, num_id)
     if num:
@@ -24,7 +25,8 @@ def get_num(num_id):
     else:
         return {'error': f'phone with an ID of {num_id} does not exist'}, 404
 
-@api.route('/phone_nums', methods=["POST"])
+@api.route('/nums', methods=["POST"])
+@token_auth.login_required
 def create_num():
     print(request)
     # Check to see that the request body is JSON
@@ -52,7 +54,7 @@ def create_num():
 
     return 'This is the create phone number route'
 
-@api.route('/phone_nums/<num_id>', methods=['PUT'])
+@api.route('/nums/<num_id>', methods=['PUT'])
 @token_auth.login_required
 def edit_num(num_id):
     # Check to see that the request body is JSON
@@ -73,7 +75,7 @@ def edit_num(num_id):
     db.session.commit()
     return phone.to_dict()
 
-@api.route('/phone_nums/<num_id>', methods=['DELETE'])
+@api.route('/nums/<num_id>', methods=['DELETE'])
 @token_auth.login_required
 def delete_num(num_id):
     # Check to see that the request body is JSON

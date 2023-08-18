@@ -1,7 +1,7 @@
 from flask_httpauth import HTTPBasicAuth, HTTPTokenAuth
 from app import db
 from app.models import User
-import datetime
+from datetime import datetime
 
 basic_auth = HTTPBasicAuth()
 token_auth = HTTPTokenAuth()
@@ -24,3 +24,7 @@ def verify(token):
         return user
     else:
         return None
+
+@token_auth.error_handler
+def handle_error(status):
+    return {'error': 'You do not have a valid token'}, status
