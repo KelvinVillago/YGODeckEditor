@@ -12,12 +12,12 @@ def get_token():
     return {'token':token,
             'token_expiration': auth_user.token_expiration}
 
-@api.route('/nums')
+@api.route('/contacts')
 def get_nums():
     nums = db.session.execute(db.select(Phone)).scalars().all()
     return [num.to_dict() for num in nums]
 
-@api.route('/nums/<num_id>')
+@api.route('/contacts/<num_id>')
 def get_num(num_id):
     num = db.session.get(Phone, num_id)
     if num:
@@ -25,7 +25,7 @@ def get_num(num_id):
     else:
         return {'error': f'phone with an ID of {num_id} does not exist'}, 404
 
-@api.route('/nums', methods=["POST"])
+@api.route('/contacts', methods=["POST"])
 @token_auth.login_required
 def create_num():
     print(request)
@@ -49,12 +49,14 @@ def create_num():
     address = data.get('address')
     phoneNum = data.get('phoneNum')
 
+    current_user = token_auth.current_user()
+
     #create new phone
     newNum = Phone(first_name=first_name, last_name=last_name, address=address, phoneNum=phoneNum, user_id=current_user.id)
 
-    return 'This is the create phone number route'
+    return newNum.to_dict(), 201
 
-@api.route('/nums/<num_id>', methods=['PUT'])
+@api.route('/contacts/<num_id>', methods=['PUT'])
 @token_auth.login_required
 def edit_num(num_id):
     # Check to see that the request body is JSON
@@ -65,7 +67,7 @@ def edit_num(num_id):
         return{'error':f"Phone with id {num_id} does not exist"}, 404
     #make sure authenticated user is phone author
     current_user = token_auth.current_user()
-    if phone.user_id != current_user:
+    if phone.user_id != current_user.id:
         return {'error': 'You do not have permission to edit this phone'}, 403     
     data = request.json
     for field in data:
@@ -75,7 +77,7 @@ def edit_num(num_id):
     db.session.commit()
     return phone.to_dict()
 
-@api.route('/nums/<num_id>', methods=['DELETE'])
+@api.route('/contacts/<num_id>', methods=['DELETE'])
 @token_auth.login_required
 def delete_num(num_id):
     # Check to see that the request body is JSON
@@ -91,3 +93,9 @@ def delete_num(num_id):
     db.session.delete()
     db.session.commit()
     return {'success':f"{phone.title} has been deleted"}
+
+@api.route('/users/me')
+@token_auth.login_required
+def get_self():
+    me = token_auth.current_user()
+    return me.to_dict()
