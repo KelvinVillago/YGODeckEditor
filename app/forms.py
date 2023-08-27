@@ -16,10 +16,7 @@ class LoginForm(FlaskForm):
     password = PasswordField('Password', validators=[InputRequired()])
     submit = SubmitField('Log In')
     
-class AddContact(FlaskForm):
-    first_name = StringField('First Name', validators=[InputRequired()])
-    last_name = StringField('Last Name', validators=[InputRequired()])
-    phoneNum = StringField('Phone Number', validators=[InputRequired()])
-    address = StringField('Address', validators=[InputRequired()])
-    submit = SubmitField('Add Contact')
+class newDeck(FlaskForm):
+    name = StringField('Deck Name', validators=[InputRequired()])
+    submit = SubmitField('Create Deck')
 

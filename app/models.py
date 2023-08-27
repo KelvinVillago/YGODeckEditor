@@ -14,7 +14,7 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(75), nullable=False, unique=True)
     password = db.Column(db.String, nullable=False)
     date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    posts = db.relationship('Phone', backref='author')
+    posts = db.relationship('Deck', backref='author')
     token = db.Column(db.String(32), index=True, unique=True)
     token_expiration=db.Column(db.DateTime)
 
@@ -55,24 +55,18 @@ class User(db.Model, UserMixin):
 def load_user(user_id):
     return db.session.get(User, user_id)
 
-class Phone(db.Model):
+class Deck(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    first_name = db.Column(db.String(50), nullable=False)
-    last_name = db.Column(db.String(50), nullable=False)
-    address = db.Column(db.String(75), nullable=False)
-    phoneNum = db.Column(db.String(75), nullable=False)
+    name = db.Column(db.String(50), nullable=False)
     dateCreated = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)  # SQL - FOREIGN KEY(user_id) REFERENCES user(id)
 
     def __repr__(self):
-        return f"<User {self.id}|{self.first_name} {self.last_name}>"
+        return f"<User {self.id}|{self.name}>"
 
     def to_dict(self):
         return {
-            'first_name':self.first_name,
-            'last_name':self.last_name,
-            'phone_number':self.phoneNum,
-            'address': self.address,
+            'name':self.name,
             'user_id':self.user_id,
             'date_created':self.dateCreated
         }

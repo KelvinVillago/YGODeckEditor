@@ -1,13 +1,13 @@
 from app import app, db
 from flask import render_template, redirect, url_for, flash
-from app.forms import SignUpForm, AddContact, LoginForm
-from app.models import User, Phone
+from app.forms import SignUpForm, newDeck, LoginForm
+from app.models import User, Deck
 from flask_login import login_user, logout_user, login_required, current_user
 
 #add a route
 @app.route('/')
 def index():
-    nums = db.session.execute(db.select(Phone)).scalars().all()
+    nums = db.session.execute(db.select(Deck)).scalars().all()
     return render_template('index.html', nums=nums)
 
 @app.route('/signup', methods=["GET", "POST"])
@@ -71,24 +71,24 @@ def login():
     return render_template('login.html', form=form)
 
 
-@app.route('/addcontact', methods=["GET", "POST"])
+@app.route('/deck', methods=["GET", "POST"])
 @login_required
-def addContact():
-    form = AddContact()
+def createDeck():
+    form = newDeck()
     if form.validate_on_submit():
-        first_name = form.first_name.data
-        last_name = form.last_name.data
-        phoneNum = form.phoneNum.data
-        address = form.address.data
+        deckName = form.name.data
         
         #create new user
-        newUser = Phone(first_name=first_name, last_name=last_name, phoneNum=phoneNum, address=address, user_id=current_user.id)
+        deck = Deck(name = deckName, user_id=current_user.id)
         
         #add user to database
-        db.session.add(newUser)
+        db.session.add(deck)
         db.session.commit()
+
+        flash(f"Deck {deckName} has been created")
+
 
         #return to home page
         return redirect(url_for('index'))
 
-    return render_template('addcontact.html', form=form)
+    return render_template('createDeck.html', form=form)
