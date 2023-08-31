@@ -58,8 +58,9 @@ def load_user(user_id):
 class Deck(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
+    deck = []
     dateCreated = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)  # SQL - FOREIGN KEY(user_id) REFERENCES user(id)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
 
     def __repr__(self):
         return f"<User {self.id}|{self.name}>"
@@ -67,6 +68,7 @@ class Deck(db.Model):
     def to_dict(self):
         return {
             'name':self.name,
+            'deck':self.deck,
             'user_id':self.user_id,
             'date_created':self.dateCreated
         }

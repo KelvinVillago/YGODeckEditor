@@ -92,3 +92,4 @@ def createDeck():
         return redirect(url_for('index'))
 
     return render_template('createDeck.html', form=form)
+

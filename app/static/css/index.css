@@ -1,0 +1,51 @@
+.play-button{
+    height: 10vh;
+    width: 10vw;
+    margin: 3vh;
+    background-color: rgba(141, 141, 141, 0.2);
+    font-size: 5vh;
+    font-family: 'Poiret One', cursive;
+    color: rgb(66, 66, 66);
+}
+
+.play-button:hover{
+    background-color: rgb(11, 186, 57);
+}
+
+.card-title{
+    font-size: 5vh;
+}
+
+.is-invisible{
+    display:none;
+}
+
+.is-visible{
+    display:block;
+}
+
+.edit{
+    border-radius: 30px 0px 0px 30px;
+    border-left: 2vw solid #09fc35;
+    font-family: 'Poiret One', cursive;
+    font-style: italic;
+    color: rgb(212, 212, 212);
+    font-size: 5vh;
+    padding:5vh;
+}
+
+.total{
+    border-radius: 0px 30px 30px 0px;
+    border-right: 2vw solid #09fc35;
+    font-family: 'Poiret One', cursive;
+    font-style: italic;
+    color: rgb(212, 212, 212);
+    padding:2vh;
+}
+
+.editor{
+    background-color: rgba(167, 167, 167, 0.5);
+    margin-top: 5vh;
+    padding:2vh;
+    border-radius: 5%;
+}
