@@ -51,6 +51,8 @@ function findCards(event, pageNumber){
 
 function displayCards(data){
     let table = document.getElementById('card-table');
+
+    clearTable(table);
     
     let card = data.data[0]
     let newCol = document.createElement('div');
