@@ -50,10 +50,18 @@
                     <button type="button" class="play-button btn btn-lg" name="return">Return</button>
                 </div>   
             </div>
-            <div class="row g-0 search-cards">
-                <input class="form-control my-3" name="card" placeholder="Card Name">
-                <button id="find-card-input" type="submit" class="form-control btn btn-primary my-3">Find Cards</button>
+            <div class="row g-0 search-cards" id="find-cards">
+                <form id="find-cards-form">
+                    <input class="form-control my-3" name="card" placeholder="Card Name">
+                    <button id="find-card-input" type="submit" class="form-control btn btn-primary my-3">Find Cards</button>
+                </form>
             </div>
+
+            <div class="row g-0" id="card-table">
+
+            </div>
+
+            
             <div class="row g-0 deck">
                 <p>Deck goes here</p>
             </div>
