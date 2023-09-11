@@ -25,74 +25,73 @@ def get_num(num_id):
     else:
         return {'error': f'Deck with an ID of {num_id} does not exist'}, 404
 
-# @api.route('/contacts', methods=["POST"])
-# @token_auth.login_required
-# def create_num():
-#     print(request)
-#     # Check to see that the request body is JSON
-#     if not request.is_json:
-#         return {'error': 'Your content-type must be application/json'}, 400
-#     # Get the data from the request body
-#     data = request.json
-#     print(data)
+@api.route('decks/<num_id>', methods=["POST"])
+@token_auth.login_required
+def create_deck():
+    print(request)
+    # Check to see that the request body is JSON
+    if not request.is_json:
+        return {'error': 'Your content-type must be application/json'}, 400
+    # Get the data from the request body
+    data = request.json
+    print(data)
 
-#     required_fields = ['first_name','last_name', 'address', 'phoneNum']
-#     missing_fields = []
-#     for field in required_fields:
-#         if field not in data:
-#             missing_fields.append(field)
-#     if missing_fields:
-#         return {'error': f"{', '.join(missing_fields)} must be in the request body"}
+    required_fields = ['name', 'mainDeck','extraDeck', 'sideDeck']
+    missing_fields = []
+    for field in required_fields:
+        if field not in data:
+            missing_fields.append(field)
+    if missing_fields:
+        return {'error': f"{', '.join(missing_fields)} must be in the request body"}
     
-#     first_name = data.get('first_name')
-#     last_name = data.get('last_name')
-#     address = data.get('address')
-#     phoneNum = data.get('phoneNum')
+    name = data.get('name')
+    mainDeck = data.get('mainDeck')
+    sideDeck = data.get('sideDeck')
+    extraDeck = data.get('extraDeck')
 
-#     current_user = token_auth.current_user()
+    current_user = token_auth.current_user()
 
-#     #create new phone
-#     newNum = Phone(first_name=first_name, last_name=last_name, address=address, phoneNum=phoneNum, user_id=current_user.id)
+    newDeck = Deck(name=name, mainDeck=mainDeck, extraDeck=extraDeck, sideDeck=sideDeck)
 
-#     return newNum.to_dict(), 201
+    return newDeck.to_dict(), 201
 
-# @api.route('/contacts/<num_id>', methods=['PUT'])
-# @token_auth.login_required
-# def edit_num(num_id):
-#     # Check to see that the request body is JSON
-#     if not request.is_json:
-#         return {'error': 'Your content-type must be application/json'}, 400
-#     phone = db.session.get(Phone, num_id)
-#     if phone is None:
-#         return{'error':f"Phone with id {num_id} does not exist"}, 404
-#     #make sure authenticated user is phone author
-#     current_user = token_auth.current_user()
-#     if phone.user_id != current_user.id:
-#         return {'error': 'You do not have permission to edit this phone'}, 403     
-#     data = request.json
-#     for field in data:
-#         if field in {'first_name', 'last_name', 'address', 'phone_number'}:
-#             setattr(phone, field, data[field])
+@api.route('/decks/<num_id>', methods=['PUT'])
+@token_auth.login_required
+def edit_deck(num_id):
+    # Check to see that the request body is JSON
+    if not request.is_json:
+        return {'error': 'Your content-type must be application/json'}, 400
+    deck = db.session.get(Deck, num_id)
+    if deck is None:
+        return{'error':f"Phone with id {num_id} does not exist"}, 404
+    #make sure authenticated user is phone author
+    current_user = token_auth.current_user()
+    if deck.user_id != current_user.id:
+        return {'error': 'You do not have permission to edit this phone'}, 403     
+    data = request.json
+    for field in data:
+        if field in {'name', 'mainDeck','extraDeck', 'sideDeck'}:
+            setattr(deck, field, data[field])
 
-#     db.session.commit()
-#     return phone.to_dict()
+    db.session.commit()
+    return deck.to_dict()
 
-# @api.route('/contacts/<num_id>', methods=['DELETE'])
-# @token_auth.login_required
-# def delete_num(num_id):
-#     # Check to see that the request body is JSON
-#     if not request.is_json:
-#         return {'error': 'Your content-type must be application/json'}, 400
-#     phone = db.session.get(Phone, num_id)
-#     if phone is None:
-#         return{'error':f"Phone with id {num_id} does not exist"}, 404
-#     #make sure authenticated user is phone author
-#     current_user = token_auth.current_user()
-#     if phone.user_id != current_user:
-#         return {'error': 'You do not have permission to edit this phone'}, 403         
-#     db.session.delete()
-#     db.session.commit()
-#     return {'success':f"{phone.title} has been deleted"}
+@api.route('/decks/<num_id>', methods=['DELETE'])
+@token_auth.login_required
+def delete_deck(num_id):
+    # Check to see that the request body is JSON
+    if not request.is_json:
+        return {'error': 'Your content-type must be application/json'}, 400
+    deck = db.session.get(Deck, num_id)
+    if deck is None:
+        return{'error':f"Phone with id {num_id} does not exist"}, 404
+    #make sure authenticated user is phone author
+    current_user = token_auth.current_user()
+    if deck.user_id != current_user:
+        return {'error': 'You do not have permission to edit this phone'}, 403         
+    db.session.delete()
+    db.session.commit()
+    return {'success':f"{deck.title} has been deleted"}
 
 @api.route('/users/me')
 @token_auth.login_required

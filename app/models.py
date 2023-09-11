@@ -58,9 +58,9 @@ def load_user(user_id):
 class Deck(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
-    mainDeck = []
-    extraDeck = []
-    sideDeck = []
+    mainDeck = db.Column(db.String, nullable=True)
+    extraDeck = db.Column(db.String, nullable=True)
+    sideDeck = db.Column(db.String, nullable=True)
     dateCreated = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
 
