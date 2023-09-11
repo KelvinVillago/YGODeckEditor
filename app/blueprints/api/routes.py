@@ -12,6 +12,11 @@ def get_token():
     return {'token':token,
             'token_expiration': auth_user.token_expiration}
 
+@api.route('/users')
+def get_decks():
+    nums = db.session.execute(db.select(User)).scalars().all()
+    return [num.to_dict() for num in nums]
+
 @api.route('/decks')
 def get_decks():
     nums = db.session.execute(db.select(Deck)).scalars().all()
