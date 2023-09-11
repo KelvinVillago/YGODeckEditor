@@ -1,6 +1,6 @@
 from . import api
 from app import db
-from app.models import Deck
+from app.models import Deck, User
 from flask import request
 from .auth import basic_auth, token_auth
 
@@ -63,11 +63,11 @@ def edit_deck(num_id):
         return {'error': 'Your content-type must be application/json'}, 400
     deck = db.session.get(Deck, num_id)
     if deck is None:
-        return{'error':f"Phone with id {num_id} does not exist"}, 404
-    #make sure authenticated user is phone author
+        return{'error':f"Deck with id {num_id} does not exist"}, 404
+    #make sure authenticated user is deck author
     current_user = token_auth.current_user()
     if deck.user_id != current_user.id:
-        return {'error': 'You do not have permission to edit this phone'}, 403     
+        return {'error': 'You do not have permission to edit this deck'}, 403     
     data = request.json
     for field in data:
         if field in {'name', 'mainDeck','extraDeck', 'sideDeck'}:
@@ -84,11 +84,11 @@ def delete_deck(num_id):
         return {'error': 'Your content-type must be application/json'}, 400
     deck = db.session.get(Deck, num_id)
     if deck is None:
-        return{'error':f"Phone with id {num_id} does not exist"}, 404
-    #make sure authenticated user is phone author
+        return{'error':f"Deck with id {num_id} does not exist"}, 404
+    #make sure authenticated user is deck author
     current_user = token_auth.current_user()
     if deck.user_id != current_user:
-        return {'error': 'You do not have permission to edit this phone'}, 403         
+        return {'error': 'You do not have permission to edit this deck'}, 403         
     db.session.delete()
     db.session.commit()
     return {'success':f"{deck.title} has been deleted"}
@@ -98,3 +98,45 @@ def delete_deck(num_id):
 def get_self():
     me = token_auth.current_user()
     return me.to_dict()
+
+@api.route('/users/me', methods=['DELETE'])
+@token_auth.login_required
+def delete_user(num_id):
+    me = token_auth.current_user()
+
+    if(me is None):
+        return {'error', 'You do not have permission to delete this user'}
+
+    # Check to see that the request body is JSON
+    if not request.is_json:
+        return {'error': 'Your content-type must be application/json'}, 400
+    user = db.session.get(User, me)
+    if user is None:
+        return{'error':f"User does not exist"}, 404
+    
+    db.session.delete()
+    db.session.commit()
+    return {'success':f"{user.username} has been deleted"}
+
+@api.route('/users/me', methods=['PUT'])
+@token_auth.login_required
+def edit_user(num_id):
+    me = token_auth.current_user()
+    
+    if (me is None):
+        return {'error': 'You do not have permission to edit this user'}, 403   
+
+    # Check to see that the request body is JSON
+    if not request.is_json:
+        return {'error': 'Your content-type must be application/json'}, 400
+    user = db.session.get(User, me)
+    if user is None:
+        return{'error':f"User does not exist"}, 404
+      
+    data = request.json
+    for field in data:
+        if field in {'firstName', 'lastName','username', 'password', 'email'}:
+            setattr(user, field, data[field])
+
+    db.session.commit()
+    return user.to_dict()
