@@ -61,6 +61,7 @@ class Deck(db.Model):
     mainDeck = db.Column(db.String, nullable=False)
     extraDeck = db.Column(db.String, nullable=False)
     sideDeck = db.Column(db.String, nullable=False)
+    creator = db.Column(db.String, nullable=False)
     dateCreated = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
 
@@ -82,5 +83,6 @@ class Deck(db.Model):
             'date_created':self.dateCreated,
             'mainDeck':self.mainDeck,
             'extraDeck':self.extraDeck,
-            'sideDeck':self.sideDeck
+            'sideDeck':self.sideDeck,
+            'creator':self.creator
         }
