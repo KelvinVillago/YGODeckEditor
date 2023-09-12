@@ -58,9 +58,9 @@ def load_user(user_id):
 class Deck(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
-    mainDeck = db.Column(db.String, nullable=True)
-    extraDeck = db.Column(db.String, nullable=True)
-    sideDeck = db.Column(db.String, nullable=True)
+    mainDeck = db.Column(db.String, nullable=False)
+    extraDeck = db.Column(db.String, nullable=False)
+    sideDeck = db.Column(db.String, nullable=False)
     dateCreated = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
 
@@ -79,5 +79,8 @@ class Deck(db.Model):
             'id':self.id,
             'name':self.name,
             'user_id':self.user_id,
-            'date_created':self.dateCreated
+            'date_created':self.dateCreated,
+            'mainDeck':self.mainDeck,
+            'extraDeck':self.extraDeck,
+            'sideDeck':self.sideDeck
         }
