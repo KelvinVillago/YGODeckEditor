@@ -128,7 +128,7 @@ def delete_deck(num_id):
         return{'error':f"Deck with id {num_id} does not exist"}, 404
     #make sure authenticated user is deck author
     current_user = token_auth.current_user()
-    if deck.user_id != current_user:
+    if deck.user_id != current_user.id:
         return {'error': 'You do not have permission to edit this deck'}, 403         
     db.session.delete()
     db.session.commit()
