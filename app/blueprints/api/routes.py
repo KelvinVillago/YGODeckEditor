@@ -123,9 +123,6 @@ def edit_deck(num_id):
 @api.route('/decks/<num_id>', methods=['DELETE'])
 @token_auth.login_required
 def delete_deck(num_id):
-    # Check to see that the request body is JSON
-    if not request.is_json:
-        return {'error': 'Your content-type must be application/json'}, 400
     deck = db.session.get(Deck, num_id)
     if deck is None:
         return{'error':f"Deck with id {num_id} does not exist"}, 404
