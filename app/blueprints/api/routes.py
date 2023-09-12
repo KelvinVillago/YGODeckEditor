@@ -86,10 +86,13 @@ def create_deck():
         return {'error': f"{', '.join(missing_fields)} must be in the request body"}
     
     name = data.get('name')
+    mainDeck =  ""
+    sideDeck =  ""
+    extraDeck =  ""
 
     current_user = token_auth.current_user()
 
-    newDeck = Deck(name=name, user_id=current_user.id)
+    newDeck = Deck(name=name, mainDeck=mainDeck, extraDeck=extraDeck, sideDeck=sideDeck, user_id=current_user.id)
 
     db.session.add(newDeck)
     db.session.commit()
