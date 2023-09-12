@@ -30,7 +30,7 @@ def get_num(num_id):
     else:
         return {'error': f'Deck with an ID of {num_id} does not exist'}, 404
 
-@api.route('decks/<num_id>', methods=["POST"])
+@api.route('decks', methods=["POST"])
 @token_auth.login_required
 def create_deck():
     print(request)

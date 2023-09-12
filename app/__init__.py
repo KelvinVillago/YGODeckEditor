@@ -10,11 +10,11 @@ app = Flask(__name__)
 # Configure our app with the values from the Config class
 app.config.from_object(Config)
 
+# Add CORS
+CORS(app, resources={r"/api/*": {'origins': '*'}})
+
 # Create an instance of SQLAlchemy to represent of our database
 db = SQLAlchemy(app)
-
-#import cors
-CORS(app, resources={r"/api/*": {'origins': '*'}})
 
 # Create an instance of Migrate to handle the database migrations of our flask app
 migrate = Migrate(app, db)
