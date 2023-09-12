@@ -53,10 +53,11 @@ def create_user():
     email = data.get('email')
     password = data.get('password')
 
+    # Check is a user with that username or email already exists
     check_user = db.session.execute(db.select(User).where((User.username == username) | (User.email == email))).scalar()
     if check_user:
-        return {'error':f"A username with that username and/or email already exists"}, 400
-    
+        return {'error': f"A user with that username and/or email already exists"}, 400
+
     # Create a new User instance with the data
     new_user = User(first_name=first_name, last_name=last_name, username=username, email=email, password=password)
     # add to the database
@@ -65,7 +66,7 @@ def create_user():
 
     return new_user.to_dict(), 201   
 
-@api.route('decks', methods=["POST"])
+@api.route('/decks', methods=["POST"])
 @token_auth.login_required
 def create_deck():
     print(request)
@@ -76,7 +77,7 @@ def create_deck():
     data = request.json
     print(data)
 
-    required_fields = ['name', 'mainDeck','extraDeck', 'sideDeck']
+    required_fields = ['name']
     missing_fields = []
     for field in required_fields:
         if field not in data:
@@ -85,13 +86,10 @@ def create_deck():
         return {'error': f"{', '.join(missing_fields)} must be in the request body"}
     
     name = data.get('name')
-    mainDeck = data.get('mainDeck')
-    sideDeck = data.get('sideDeck')
-    extraDeck = data.get('extraDeck')
 
     current_user = token_auth.current_user()
 
-    newDeck = Deck(name=name, mainDeck=mainDeck, extraDeck=extraDeck, sideDeck=sideDeck, user_id=current_user.id)
+    newDeck = Deck(name=name, user_id=current_user.id)
 
     db.session.add(newDeck)
     db.session.commit()
