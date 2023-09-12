@@ -76,6 +76,7 @@ class Deck(db.Model):
 
     def to_dict(self):
         return {
+            'id':self.id,
             'name':self.name,
             'user_id':self.user_id,
             'date_created':self.dateCreated
