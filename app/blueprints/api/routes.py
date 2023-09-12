@@ -130,7 +130,7 @@ def delete_deck(num_id):
     current_user = token_auth.current_user()
     if deck.user_id != current_user.id:
         return {'error': 'You do not have permission to edit this deck'}, 403         
-    db.session.delete()
+    db.session.delete(deck)
     db.session.commit()
     return {'success':f"{deck.title} has been deleted"}
 
