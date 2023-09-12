@@ -14,7 +14,7 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(75), nullable=False, unique=True)
     password = db.Column(db.String, nullable=False)
     date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    posts = db.relationship('Deck', backref='author')
+    decks = db.relationship('Deck', backref='creator')
     token = db.Column(db.String(32), index=True, unique=True)
     token_expiration=db.Column(db.DateTime)
 
@@ -61,7 +61,6 @@ class Deck(db.Model):
     mainDeck = db.Column(db.String, nullable=False)
     extraDeck = db.Column(db.String, nullable=False)
     sideDeck = db.Column(db.String, nullable=False)
-    creator = db.Column(db.String, nullable=False)
     dateCreated = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
 
@@ -84,5 +83,5 @@ class Deck(db.Model):
             'mainDeck':self.mainDeck,
             'extraDeck':self.extraDeck,
             'sideDeck':self.sideDeck,
-            'creator':self.creator
+            'creator':self.creator.to_dict()
         }
