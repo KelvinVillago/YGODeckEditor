@@ -56,7 +56,10 @@ def create_deck():
 
     current_user = token_auth.current_user()
 
-    newDeck = Deck(name=name, mainDeck=mainDeck, extraDeck=extraDeck, sideDeck=sideDeck)
+    newDeck = Deck(name=name, mainDeck=mainDeck, extraDeck=extraDeck, sideDeck=sideDeck, user_id=current_user.id)
+
+    db.session.add(newDeck)
+    db.session.commit()
 
     return newDeck.to_dict(), 201
 
